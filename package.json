@@ -18,6 +18,7 @@
   "devDependencies": {
     "@nuxt/eslint": "^0.3.12",
     "@nuxtjs/google-fonts": "^3.2.0",
+    "@pinia-plugin-persistedstate/nuxt": "^1.2.0",
     "@pinia/nuxt": "^0.5.1",
     "@vite-pwa/nuxt": "^0.7.0",
     "eslint": "^9.2.0",

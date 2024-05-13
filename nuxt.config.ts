@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
     "@nuxtjs/google-fonts",
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   pwa: {
     strategies: "generateSW",

@@ -1,7 +1,14 @@
 <script setup lang="ts">
 const currencyStore = useCurrencyStore();
 
-const { westunion, commercial } = storeToRefs(currencyStore);
+const {
+  westunion,
+  commercial,
+  apiWestunion,
+  apiCommercial,
+  myCommercial,
+  myWestunion,
+} = storeToRefs(currencyStore);
 
 onMounted(() => {
   currencyStore.getWestunion();
@@ -45,15 +52,15 @@ function getPesosWestunion() {
   }
 }
 
-function toCurrencyBRL(value: number) {
-  return value.toLocaleString("pt-BR", {
+function toCurrencyBRL(value: number | undefined) {
+  return value?.toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 }
 
-function toCurrencyARS(value: number) {
-  return value.toLocaleString("es-AR", {
+function toCurrencyARS(value: number | undefined) {
+  return value?.toLocaleString("es-AR", {
     style: "currency",
     currency: "ARS",
   });
@@ -61,6 +68,10 @@ function toCurrencyARS(value: number) {
 
 function changeSelected(value: string) {
   selected.value = value;
+}
+function clear() {
+  myWestunion.value = undefined;
+  myCommercial.value = undefined;
 }
 </script>
 
@@ -111,10 +122,40 @@ function changeSelected(value: string) {
             {{ toCurrencyARS(getPesosWestunion() ?? 0) || "$ 0,00" }}
           </div>
         </div>
+        <div class="rounded-md px-2 py-1 mt-5 flex justify-between">
+          <div>
+            <div class="text-blue-200">
+              <span :class="myCommercial && 'line-through'">{{
+                toCurrencyARS(apiCommercial)
+              }}</span>
+              <span>
+                {{ toCurrencyARS(myCommercial) }}
+              </span>
+            </div>
+            <div class="text-yellow-200">
+              <span :class="myWestunion && 'line-through'">{{
+                toCurrencyARS(apiWestunion)
+              }}</span>
+              <span>
+                {{ toCurrencyARS(myWestunion) }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <UButton
+              icon="i-heroicons-x-circle"
+              variant="ghost"
+              color="gray"
+              size="xl"
+              @click="clear"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <NuxtPwaManifest />
+  <ModalConfig />
 </template>
 <style>
 * {
