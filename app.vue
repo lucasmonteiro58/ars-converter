@@ -10,12 +10,6 @@ onMounted(() => {
 
 const selected = ref("real");
 
-const options = [
-  { label: "Real", value: "real", color: "green" },
-  { label: "Pesos", value: "pesos", color: "blue" },
-  { label: "Pesos WestUnion", value: "pesosWestunion", color: "yellow" },
-];
-
 const input = ref(1);
 
 function getReal() {
@@ -64,36 +58,22 @@ function toCurrencyARS(value: number) {
     currency: "ARS",
   });
 }
+
+function changeSelected(value: string) {
+  selected.value = value;
+}
 </script>
 
 <template>
   <div class="bg-slate-900 h-screen w-screen flex justify-center">
     <div class="flex px-4 py-4 flex-col w-full sm:max-w-[400px]">
-      <div class="flex justify-between">
-        <div class="flex flex-col gap-2 text-white mb-4 mt-4">
-          <URadio
-            v-for="option of options"
-            :key="option.value"
-            v-model="selected"
-            v-bind="option"
-            :color="options.find((o) => o.value === selected)?.color ?? 'black'"
-          >
-            <template #label>
-              <span class="text-white text-md">{{ option.label }}</span>
-            </template>
-          </URadio>
-        </div>
-        <div class="flex justify-center rounded-md">
-          <BrasilFlag
-            v-if="selected === 'real'"
-            class="w-[120px] max-h-[80px]"
-          />
-          <ArgFlag v-if="selected === 'pesos'" class="w-[120px] max-h-[80px]" />
-          <WestUnion
-            v-if="selected === 'pesosWestunion'"
-            class="w-[120px] max-h-[80px]"
-          />
-        </div>
+      <div class="flex justify-center rounded-md mb-6">
+        <BrasilFlag v-if="selected === 'real'" class="w-[400px] h-[100px]" />
+        <ArgFlag v-if="selected === 'pesos'" class="w-[400px] h-[100px]" />
+        <WestUnion
+          v-if="selected === 'pesosWestunion'"
+          class="w-[100px] h-[100px]"
+        />
       </div>
       <UInput
         v-model="input"
@@ -103,20 +83,29 @@ function toCurrencyARS(value: number) {
         type="number"
         input-class="text-center py-4 text-2xl"
       />
-      <div class="mt-4 flex flex-col gap-2">
-        <div class="bg-green-200 px-3 py-3 rounded-md">
+      <div class="mt-4 flex flex-col gap-2 text-slate-900">
+        <div
+          class="bg-green-200 px-3 py-3 rounded-md cursor-pointer"
+          @click="changeSelected('real')"
+        >
           <div class="">BRL</div>
           <div class="font-bold text-lg">
             {{ toCurrencyBRL(getReal() ?? 0) || "R$ 0,00" }}
           </div>
         </div>
-        <div class="bg-blue-200 px-3 py-3 rounded-md">
+        <div
+          class="bg-blue-200 px-3 py-3 rounded-md cursor-pointer"
+          @click="changeSelected('pesos')"
+        >
           <div class="">Pesos</div>
           <div class="font-bold text-lg">
             {{ toCurrencyARS(getPesos() ?? 0) || "$ 0,00" }}
           </div>
         </div>
-        <div class="bg-yellow-200 px-3 py-3 rounded-md">
+        <div
+          class="bg-yellow-200 px-3 py-3 rounded-md cursor-pointer"
+          @click="changeSelected('pesosWestunion')"
+        >
           <div class="">Pesos WestUnion</div>
           <div class="font-bold text-lg">
             {{ toCurrencyARS(getPesosWestunion() ?? 0) || "$ 0,00" }}
