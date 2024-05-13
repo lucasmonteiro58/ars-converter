@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { ModalConfig } from "#build/components";
+
 const currencyStore = useCurrencyStore();
 
 const {
@@ -8,14 +10,21 @@ const {
   apiCommercial,
   myCommercial,
   myWestunion,
+  loadingCommercial,
+  loadingWestunion,
 } = storeToRefs(currencyStore);
 
 onMounted(() => {
-  currencyStore.getWestunion();
-  currencyStore.getCommercial();
+  getCurrency();
 });
 
+function getCurrency() {
+  currencyStore.getWestunion();
+  currencyStore.getCommercial();
+}
+
 const selected = ref("real");
+const refModal = ref(null) as Ref<InstanceType<typeof ModalConfig> | null>;
 
 const input = ref(1);
 
@@ -69,6 +78,10 @@ function toCurrencyARS(value: number | undefined) {
 function changeSelected(value: string) {
   selected.value = value;
 }
+
+function openModal() {
+  refModal.value?.open();
+}
 function clear() {
   myWestunion.value = undefined;
   myCommercial.value = undefined;
@@ -77,6 +90,15 @@ function clear() {
 
 <template>
   <div class="bg-slate-900 h-screen w-screen flex justify-center">
+    <UButton
+      class="fixed top-6 left-4"
+      icon="i-heroicons-arrow-path-16-solid"
+      size="xl"
+      color="gray"
+      rounded
+      variant="ghost"
+      @click="getCurrency"
+    />
     <div class="flex px-4 py-4 flex-col w-full sm:max-w-[400px]">
       <div class="flex justify-center rounded-md mb-6">
         <BrasilFlag v-if="selected === 'real'" class="w-[400px] h-[100px]" />
@@ -105,12 +127,15 @@ function clear() {
           </div>
         </div>
         <div
-          class="bg-blue-200 px-3 py-3 rounded-md cursor-pointer"
+          class="bg-blue-200 px-3 py-3 rounded-md cursor-pointer relative"
           @click="changeSelected('pesos')"
         >
           <div class="">Pesos</div>
           <div class="font-bold text-lg">
-            {{ toCurrencyARS(getPesos() ?? 0) || "$ 0,00" }}
+            <span v-if="!loadingCommercial">{{
+              toCurrencyARS(getPesos() ?? 0) || "$ 0,00"
+            }}</span>
+            <UIcon v-else name="i-eos-icons-loading" dynamic />
           </div>
         </div>
         <div
@@ -119,11 +144,14 @@ function clear() {
         >
           <div class="">Pesos WestUnion</div>
           <div class="font-bold text-lg">
-            {{ toCurrencyARS(getPesosWestunion() ?? 0) || "$ 0,00" }}
+            <span v-if="!loadingWestunion">{{
+              toCurrencyARS(getPesosWestunion() ?? 0) || "$ 0,00"
+            }}</span>
+            <UIcon v-else name="i-eos-icons-loading" dynamic />
           </div>
         </div>
         <div class="rounded-md px-2 py-1 mt-5 flex justify-between">
-          <div>
+          <div @click="openModal">
             <div class="text-blue-200">
               <span :class="myCommercial && 'line-through'">{{
                 toCurrencyARS(apiCommercial)
@@ -155,7 +183,7 @@ function clear() {
     </div>
   </div>
   <NuxtPwaManifest />
-  <ModalConfig />
+  <ModalConfig ref="refModal" />
 </template>
 <style>
 * {

@@ -9,6 +9,12 @@ const { myWestunion, myCommercial, apiWestunion, apiCommercial } =
 function close() {
   isOpen.value = false;
 }
+
+function open() {
+  isOpen.value = true;
+}
+
+defineExpose({ open });
 </script>
 
 <template>
