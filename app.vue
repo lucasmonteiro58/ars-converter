@@ -114,6 +114,7 @@ function changeSelected(value: string) {
       </div>
     </div>
   </div>
+  <NuxtPwaManifest />
 </template>
 <style>
 * {
