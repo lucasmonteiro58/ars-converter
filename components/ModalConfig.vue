@@ -29,7 +29,8 @@ defineExpose({ open });
   <UModal
     v-model="isOpen"
     :ui="{
-      container: 'flex min-h-full items-center justify-center text-center',
+      container:
+        'flex min-h-full items-start sm:items-center justify-center text-center',
     }"
   >
     <UCard
